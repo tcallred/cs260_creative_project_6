@@ -10,35 +10,33 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+        var username = "USERNAME";
         $(document).ready(function() {
-            $.get("/topic", function(data) {
-                $("#topic").append('<strong>' + data + '</strong>');
-            });
-        })
+            $("#login").html('Logged in as: <strong>' + username + '</strong>')
+        });
         $(function() {
+
             var socket = io();
             $('#form-left').submit(function() {
-                socket.emit('chat message-left', $('#m-left').val());
+                socket.emit('chat message-left', username, $('#m-left').val());
                 $('#m-left').val('');
                 return false;
             });
-            socket.on('chat message-left', function(msg) {
-                $('#messages-left').append($('<li>').text(msg));
+            socket.on('chat message-left', function(usr, msg) {
+                $('#messages-left').append($('<li>').html('<strong>' + usr + '</strong>: ').append($('<span>').text(msg)));
                 $("#left-pan").scrollTop($("#left-pan")[0].scrollHeight);
             });
             $('#form-right').submit(function() {
-                socket.emit('chat message-right', $('#m-right').val());
+                socket.emit('chat message-right', username, $('#m-right').val());
                 $('#m-right').val('');
                 return false;
             });
-            socket.on('chat message-right', function(msg) {
-                $('#messages-right').append($('<li>').text(msg));
+            socket.on('chat message-right', function(usr, msg) {
+                $('#messages-right').append($('<li>').html('<strong>' + usr + '</strong>: ').append($('<span>').text(msg)));
                 $("#right-pan").scrollTop($("#right-pan")[0].scrollHeight);
             });
-            socket.on('new topic', function() {
-                $.get("/topic", function(data) {
-                    $("#topic").html('Topic: <strong>' + data + '</strong>');
-                });
+            socket.on('new topic', function(data) {
+                $("#topic").html('Topic: <strong>' + data + '</strong>');
                 $('#messages-left').append($('<h5>').text('-- NEW TOPIC--'));
                 $('#messages-right').append($('<h5>').text('-- NEW TOPIC--'));
             })
@@ -102,7 +100,7 @@
 <body style="background-color:#404040">
     <div class="container">
         <h1 style="color:white;">Welcome to Debate Box</h1>
-
+        <h3 style="color:#a138d1;" id="login"></h3>
         <h4 id="topic" style="color:white;">Topic: </h4>
         <p style="color:#3894d1">Topics change every minute and a half.</p>
         <div class="row">
