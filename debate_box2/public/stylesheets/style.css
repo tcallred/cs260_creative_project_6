@@ -1,8 +1,50 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.panel-body {
+    max-height: 55%;
+    min-height: 55%;
+    overflow-y: scroll;
 }
 
-a {
-  color: #00B7FF;
+.panel-body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.panel-body::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.panel-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: rgb(112, 112, 112);
+}
+
+ul {
+    padding: 0px;
+}
+
+li {
+    list-style: none;
+}
+
+#left-pan li {
+    text-align: right;
+}
+
+#left-pan li:nth-child(odd) {
+    background-color: rgb(200, 255, 200);
+}
+
+#right-pan li {
+    text-align: left;
+}
+
+#right-pan li:nth-child(odd) {
+    background-color: rgb(255, 200, 200);
+}
+
+input {
+    margin-bottom: 1em;
 }

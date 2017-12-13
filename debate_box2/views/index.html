@@ -1,0 +1,98 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Debate Box</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var username = "<%= username %>";
+        $(document).ready(function() {
+            $("#login").html('Logged in as: <strong>' + username + '</strong>')
+        });
+        $(function() {
+
+            var socket = io();
+            $('#form-left').submit(function() {
+                socket.emit('chat message-left', username, $('#m-left').val());
+                $('#m-left').val('');
+                return false;
+            });
+            socket.on('chat message-left', function(usr, msg) {
+                $('#messages-left').append($('<li>').html('<strong>' + usr + '</strong>: ').append($('<span>').text(msg)));
+                $("#left-pan").scrollTop($("#left-pan")[0].scrollHeight);
+            });
+            $('#form-right').submit(function() {
+                socket.emit('chat message-right', username, $('#m-right').val());
+                $('#m-right').val('');
+                return false;
+            });
+            socket.on('chat message-right', function(usr, msg) {
+                $('#messages-right').append($('<li>').html('<strong>' + usr + '</strong>: ').append($('<span>').text(msg)));
+                $("#right-pan").scrollTop($("#right-pan")[0].scrollHeight);
+            });
+            socket.on('new topic', function(data) {
+                $("#topic").html('Topic: <strong>' + data + '</strong>');
+                $('#messages-left').append($('<h5>').text('-- NEW TOPIC--'));
+                $('#messages-right').append($('<h5>').text('-- NEW TOPIC--'));
+            })
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+
+<body style="background-color:#404040">
+    <div class="container">
+        <h1 style="color:white;">Welcome to Debate Box</h1>
+        <h3 style="color:#a138d1;" id="login"></h3>
+        <a href="/logout">Log out here</a>
+        <h4 id="topic" style="color:white;">Topic: </h4>
+        <p style="color:#3894d1">Topics change every minute and a half.</p>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default text-center" style="border: 1px solid #43d643 !important;">
+                    <div class="panel-heading" style="background: #43d643 !important;">
+                        <h2>Agree</h2>
+                    </div>
+                    <div id="left-pan" class="panel-body">
+                        <ul id="messages-left">
+
+                        </ul>
+                    </div>
+                    <div class="panel-footer" style="background: #43d643 !important;">
+                        <form id="form-left" action="">
+                            <input placeholder="Comment" class="form-control" type="text" id="m-left" />
+
+                            <button class="btn" id="submitAgree">Enter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-default text-center" style="border: 1px solid #d64343 !important;">
+                    <div class="panel-heading" style="background: #d64343 !important;">
+                        <h2>Disagree</h2>
+                    </div>
+                    <div id="right-pan" class="panel-body">
+                        <ul id="messages-right">
+
+                        </ul>
+                    </div>
+                    <div class="panel-footer" style="background: #d64343 !important;">
+                        <form id="form-right" action="">
+                            <input placeholder="Comment" class="form-control" type="text" id="m-right" />
+
+                            <button class="btn" id="submitDisagree">Enter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
